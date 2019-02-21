@@ -1,3 +1,4 @@
+
 # MarsTech Dependency Injection
  - [Instalation](#instalation)
 	 - [Configuration](#configuration)
@@ -99,9 +100,9 @@ class MyClassDpiFactory
 {
 public:
 	virtual ~MyClassDpiFactory() {  }
-	static MyClassDpiFactory* GetMyClassDpiFactory()
+	static std::shared_ptr<MyClassDpiFactory> Get()
 	{ \
-		return new (std::nothrow) MyClassDpiFactory();
+		return std::shared_ptr<MyClassDpiFactory> (new (std::nothrow) MyClassDpiFactory());
 	} 
 ~~~
 
@@ -116,7 +117,7 @@ Defines GET method for interface and its implementation. Pass all defined argume
 MSV_FACTORY_GET_4(IMyClass, MyClass, int, double, int*, std::shared_ptr<int>)
 
 //generates:
-virtual IMyClass* GetIMyClass(int arg1, double arg2, int* arg3, , std::shared_ptr<int> arg4) { return new (std::nothrow) MyClass(arg1, arg2, arg3, arg4); }
+virtual std::shared_ptr<IMyClass> GetIMyClass(int arg1, double arg2, int* arg3, std::shared_ptr<int> arg4) const { return std::shared_ptr<IMyClass>(new (std::nothrow) MyClass(arg1, arg2, arg3, arg4)); }
 ~~~
 
 ### MSV_FACTORY_GET_WITH_NAMESPACE_n
@@ -130,7 +131,7 @@ Same as [MSV_FACTORY_GET_n](#msv_factory_get_n), but interface is in namespace.
 MSV_FACTORY_GET_4(IfaceNamespace, IMyClass, ImplNamespace::MyClass, int, double, int*, std::shared_ptr<int>)
 
 //generates:
-virtual IfaceNamespace::IMyClass* GetIMyClass(int arg1, double arg2, int* arg3, , std::shared_ptr<int> arg4) { return new (std::nothrow) ImplNamespace::MyClass(arg1, arg2, arg3, arg4); }
+virtual std::shared_ptr<IfaceNamespace::IMyClass> GetIMyClass(int arg1, double arg2, int* arg3, std::shared_ptr<int> arg4) { return std::shared_ptr<IfaceNamespace::IMyClass>(new (std::nothrow) ImplNamespace::MyClass(arg1, arg2, arg3, arg4)); }
 ~~~
 
 ### MSV_FACTORY_END

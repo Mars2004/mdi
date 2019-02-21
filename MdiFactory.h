@@ -38,6 +38,36 @@ along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 #define MARSTECH_DEPENDENCY_INJECTION_FACTORY_H
 
 
+#ifndef MSV_INTERFACE_POINTER
+#include <memory>
+
+/**************************************************************************************************//**
+* @def			MSV_INTERFACE_POINTER(msvIFaceName)
+* @brief			Interface pointer type.
+* @details		Defines type of pointer interface - classic pointer, shared_ptr, etc.
+* @param[in]	msvIFaceName			The interface name.
+* @note			For classic pointer define as: #define MSV_INTERFACE_POINTER(msvIFaceName) msvIFaceName*
+* @note			See some of MSV_FACTORY_GET_n macros how to use this macro.
+* @see			MSV_FACTORY_INNER_GET_BODY
+******************************************************************************************************/
+#define MSV_INTERFACE_POINTER(msvIFaceName) std::shared_ptr<msvIFaceName>
+
+#ifndef MSV_INTERFACE_CREATE
+/**************************************************************************************************//**
+* @def			MSV_INTERFACE_CREATE(msvIFaceName, msvIFaceCreate)
+* @brief			Interface create.
+* @details		Defines how to create interface.
+* @param[in]	msvIFaceName			The interface name.
+* @param[in]	msvIFaceCreate			Create interface - allocation.
+* @note			For classic pointer define as: #define MSV_INTERFACE_CREATE(msvIFaceName, msvIFaceCreate) msvIFaceCreate
+* @note			See @ref MSV_FACTORY_INNER_GET_BODY how to use this macro.
+* @see			MSV_FACTORY_INNER_GET_BODY
+******************************************************************************************************/
+#define MSV_INTERFACE_CREATE(msvIFaceName, msvIFaceCreate) std::shared_ptr<msvIFaceName>(msvIFaceCreate)
+#endif // !MSV_INTERFACE_CREATE
+#endif // !MSV_INTERFACE_POINTER
+
+
 /**************************************************************************************************//**
 * @def			MSV_FACTORY_START(msvFactoryName)
 * @brief			Dependecy injection factory start.
@@ -53,9 +83,9 @@ class msvFactoryName \
 { \
 public: \
 	virtual ~msvFactoryName() {  } \
-	static msvFactoryName* Get##msvFactoryName() \
+	static MSV_INTERFACE_POINTER(msvFactoryName) Get() \
 	{ \
-		return new (std::nothrow) msvFactoryName(); \
+		return MSV_INTERFACE_CREATE(msvFactoryName, new (std::nothrow) msvFactoryName()); \
 	} 
 
 /**************************************************************************************************//**
@@ -73,8 +103,9 @@ public: \
 * @details		Creates GET method body in MSV_FACTORY_GET and MSV_FACTORY_GET_WITH_NAMESPACE macros.
 * @param[in]	msvImplName			The implementation name (name of class which will be created).
 * @warning		Do not use this macro standalone. It is used as part of MSV_FACTORY_GET and MSV_FACTORY_GET_WITH_NAMESPACE macros.
+* @see			MSV_INTERFACE_CREATE
 ******************************************************************************************************/
-#define MSV_FACTORY_INNER_GET_BODY(msvImplName, ...) { return new (std::nothrow) msvImplName(__VA_ARGS__); }
+#define MSV_FACTORY_INNER_GET_BODY(msvImplName, ...) { return MSV_INTERFACE_CREATE(msvImplName, new (std::nothrow) msvImplName(__VA_ARGS__)); }
 
 /**************************************************************************************************//**
 * @def			MSV_FACTORY_GET_0(msvIFaceName, msvImplName)
@@ -87,7 +118,7 @@ public: \
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_0(msvIFaceName, msvImplName) virtual msvIFaceName* Get##msvIFaceName() \
+#define MSV_FACTORY_GET_0(msvIFaceName, msvImplName) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName() const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName)
 
 /**************************************************************************************************//**
@@ -102,7 +133,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_0(msvIFaceNamespace, msvIFaceName, msvImplName) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName() \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_0(msvIFaceNamespace, msvIFaceName, msvImplName) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName() const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName)
 
 /**************************************************************************************************//**
@@ -117,7 +148,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_1(msvIFaceName, msvImplName, msvArg1) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1) \
+#define MSV_FACTORY_GET_1(msvIFaceName, msvImplName, msvArg1) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1)
 
 /**************************************************************************************************//**
@@ -133,7 +164,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_1(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_1(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1)
 
 /**************************************************************************************************//**
@@ -149,7 +180,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_2(msvIFaceName, msvImplName, msvArg1, msvArg2) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2) \
+#define MSV_FACTORY_GET_2(msvIFaceName, msvImplName, msvArg1, msvArg2) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2)
 
 /**************************************************************************************************//**
@@ -166,7 +197,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_2(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_2(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2)
 
 /**************************************************************************************************//**
@@ -183,7 +214,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_3(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3) \
+#define MSV_FACTORY_GET_3(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3)
 
 /**************************************************************************************************//**
@@ -201,7 +232,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_3(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_3(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3)
 
 /**************************************************************************************************//**
@@ -219,7 +250,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_4(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4) \
+#define MSV_FACTORY_GET_4(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4)
 
 /**************************************************************************************************//**
@@ -238,7 +269,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_4(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_4(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4)
 
 /**************************************************************************************************//**
@@ -257,7 +288,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_5(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5) \
+#define MSV_FACTORY_GET_5(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5)
 
 /**************************************************************************************************//**
@@ -277,7 +308,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_5(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_5(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5)
 
 /**************************************************************************************************//**
@@ -297,7 +328,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_6(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6) \
+#define MSV_FACTORY_GET_6(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6)
 
 /**************************************************************************************************//**
@@ -318,7 +349,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_6(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_6(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6)
 
 /**************************************************************************************************//**
@@ -339,7 +370,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6)
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_7(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7) \
+#define MSV_FACTORY_GET_7(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
 /**************************************************************************************************//**
@@ -361,7 +392,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_7(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_7(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7)
 
 /**************************************************************************************************//**
@@ -383,7 +414,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_8(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8) \
+#define MSV_FACTORY_GET_8(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 
 /**************************************************************************************************//**
@@ -406,7 +437,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_8(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_8(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)
 
 /**************************************************************************************************//**
@@ -429,7 +460,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_9(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9) \
+#define MSV_FACTORY_GET_9(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
 
 /**************************************************************************************************//**
@@ -453,7 +484,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_9(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_9(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9)
 
 /**************************************************************************************************//**
@@ -477,7 +508,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_10(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9, msvArg10) virtual msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9, msvArg10 arg10) \
+#define MSV_FACTORY_GET_10(msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9, msvArg10) virtual MSV_INTERFACE_POINTER(msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9, msvArg10 arg10) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
 
 /**************************************************************************************************//**
@@ -502,7 +533,7 @@ MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7
 * @see			MSV_FACTORY_START
 * @see			MSV_FACTORY_END
 ******************************************************************************************************/
-#define MSV_FACTORY_GET_WITH_NAMESPACE_10(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9, msvArg10) virtual msvIFaceNamespace##::##msvIFaceName* Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9, msvArg10 arg10) \
+#define MSV_FACTORY_GET_WITH_NAMESPACE_10(msvIFaceNamespace, msvIFaceName, msvImplName, msvArg1, msvArg2, msvArg3, msvArg4, msvArg5, msvArg6, msvArg7, msvArg8, msvArg9, msvArg10) virtual MSV_INTERFACE_POINTER(msvIFaceNamespace##::msvIFaceName) Get##msvIFaceName(msvArg1 arg1, msvArg2 arg2, msvArg3 arg3, msvArg4 arg4, msvArg5 arg5, msvArg6 arg6, msvArg7 arg7, msvArg8 arg8, msvArg9 arg9, msvArg10 arg10) const \
 MSV_FACTORY_INNER_GET_BODY(msvImplName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10)
 
 
