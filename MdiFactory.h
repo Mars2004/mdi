@@ -39,7 +39,13 @@ along with Foobar. If not, see <https://www.gnu.org/licenses/>.
 
 
 #ifndef MSV_INTERFACE_POINTER
+
+#include "mheaders/MsvCompiler.h"
+MSV_DISABLE_ALL_WARNINGS
+
 #include <memory>
+
+MSV_ENABLE_WARNINGS
 
 /**************************************************************************************************//**
 * @def			MSV_INTERFACE_POINTER(msvIFaceName)

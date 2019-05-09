@@ -1,8 +1,14 @@
 #include "pch.h"
 
+//#define MSV_INTERFACE_POINTER(msvIFaceName) msvIFaceName*
+//#define MSV_INTERFACE_CREATE(msvIFaceName, msvIFaceCreate) msvIFaceCreate
 #include "../MdiFactory.h"
 
+MSV_DISABLE_ALL_WARNINGS
+
 #include <memory>
+
+MSV_ENABLE_WARNINGS
 
 
 namespace MsvFactoryTestNamespace
@@ -50,7 +56,7 @@ TEST(MsvFactoryTest, MsvEmptyFactoryCanBeCreated)
 	MSV_FACTORY_START(TestFactory)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 }
 
 TEST(MsvFactoryTest, MSV_FACTORY_GET_0_ReturnsValidPointers)
@@ -59,7 +65,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_0_ReturnsValidPointers)
 		MSV_FACTORY_GET_0(ITestObject, TestObject0)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject());
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -71,7 +77,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_0_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_0(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject0)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject());
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -83,7 +89,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_1_ReturnsValidPointers)
 		MSV_FACTORY_GET_1(ITestObject, TestObject1, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1));
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -97,7 +103,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_1_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_1(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject1, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -111,7 +117,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_2_ReturnsValidPointers)
 		MSV_FACTORY_GET_2(ITestObject, TestObject2, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2));
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -126,7 +132,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_2_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_2(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject2, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -141,7 +147,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_3_ReturnsValidPointers)
 		MSV_FACTORY_GET_3(ITestObject, TestObject3, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3));
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -157,7 +163,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_3_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_3(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject3, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -173,7 +179,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_4_ReturnsValidPointers)
 		MSV_FACTORY_GET_4(ITestObject, TestObject4, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4));
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -190,7 +196,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_4_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_4(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject4, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -207,7 +213,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_5_ReturnsValidPointers)
 		MSV_FACTORY_GET_5(ITestObject, TestObject5, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5));
 	
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -225,7 +231,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_5_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_5(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject5, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -243,7 +249,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_6_ReturnsValidPointers)
 		MSV_FACTORY_GET_6(ITestObject, TestObject6, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -262,7 +268,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_6_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_6(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject6, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -281,7 +287,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_7_ReturnsValidPointers)
 		MSV_FACTORY_GET_7(ITestObject, TestObject7, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -301,7 +307,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_7_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_7(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject7, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -321,7 +327,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_8_ReturnsValidPointers)
 		MSV_FACTORY_GET_8(ITestObject, TestObject8, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -342,7 +348,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_8_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_8(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject8, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -363,7 +369,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_9_ReturnsValidPointers)
 		MSV_FACTORY_GET_9(ITestObject, TestObject9, int, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8, 9));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -385,7 +391,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_9_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_9(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject9, int, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8, 9));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -407,7 +413,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_10_ReturnsValidPointers)
 		MSV_FACTORY_GET_10(ITestObject, TestObject10, int, int, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
 	EXPECT_TRUE(spTestObject != nullptr);
@@ -430,7 +436,7 @@ TEST(MsvFactoryTest, MSV_FACTORY_GET_WITH_NAMESPACE_10_ReturnsValidPointers)
 		MSV_FACTORY_GET_WITH_NAMESPACE_10(MsvFactoryTestNamespace, ITestObject, MsvFactoryTestNamespace::TestObject10, int, int, int, int, int, int, int, int, int, int)
 	MSV_FACTORY_END
 
-	std::shared_ptr<TestFactory> spTestFactory(TestFactory::GetTestFactory());
+	std::shared_ptr<TestFactory> spTestFactory(TestFactory::Get());
 	std::shared_ptr<MsvFactoryTestNamespace::ITestObject> spTestObject(spTestFactory->GetITestObject(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
 
 	EXPECT_TRUE(spTestObject != nullptr);
