@@ -1,6 +1,6 @@
 
 # MarsTech Dependency Injection
- - [Instalation](#instalation)
+ - [Installation](#installation)
 	 - [Configuration](#configuration)
  - [MDI Factory](#mdi-factory)
 	 - [MSV_FACTORY_START](#msv_factory_start)
@@ -8,6 +8,7 @@
 	 - [MSV_FACTORY_GET_WITH_NAMESPACE_n](#msv_factory_get_with_namespace_n)
 	 - [MSV_FACTORY_END](#msv_factory_end)
  - [MDI Injector](#mdi-injector)
+ - [Usage Example](#usage-example)
  - [Source code documentation](#source-code-documentation)
  - [License](#license)
 
@@ -18,7 +19,7 @@ If you want use this library effectivelly, you should at least know some basics 
  - C++ Dependency Injection
  - C++ (Unit) Testing
 
-## Instalation
+## Installation
 MDI is header only project/library - there is no static or dynamic library. You can download repository and include header file mdi.h (or one of MdiFactory.h and MdiInjector.h if you need only one of them) to your project.
 
 ### Configuration
@@ -189,6 +190,11 @@ protected:
 	std::share_ptr<MyClassInjector> m_spInjector;
 };
 ~~~
+
+## Usage Example
+There is also an [usage example](https://github.com/Mars2004/msys/tree/master/Example) which uses the most of [MarsTech](https://github.com/Mars2004) projects and libraries.
+Its source codes and readme can be found at:
+ - [https://github.com/Mars2004/msys/tree/master/Example](https://github.com/Mars2004/msys/tree/master/Example)
 
 ## Source code documentation
 You can find generated source code documentation at [https://www.marstech.cz/projects/mdi/1.0.1/doc](https://www.marstech.cz/projects/mdi/1.0.1/doc).
